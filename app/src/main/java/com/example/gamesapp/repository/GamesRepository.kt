@@ -1,5 +1,6 @@
 package com.example.gamesapp.repository
 
+import com.example.gamesapp.models.details.GameDetail
 import com.example.gamesapp.models.upcoming.GamesUpcoming
 import com.example.gamesapp.network.GamesApi
 import dagger.hilt.android.scopes.ActivityScoped
@@ -11,5 +12,9 @@ class GamesRepository @Inject constructor(
 ){
     suspend fun upcomingGames(): GamesUpcoming{
         return api.upcomingGames()
+    }
+
+    suspend fun detailGameResponse(slug:String): GameDetail {
+        return api.detailGameResponse(slug)
     }
 }

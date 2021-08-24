@@ -5,10 +5,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.ImageLoader
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
@@ -30,6 +28,7 @@ import com.example.gamesapp.models.upcoming.GamesList
 import com.example.gamesapp.ui.theme.GamesAppTheme
 import com.example.gamesapp.utils.Constants.juegos
 import com.example.gamesapp.utils.iconGamePlataform
+import com.google.gson.Gson
 import dev.chrisbanes.accompanist.glide.GlideImage
 
 
@@ -42,10 +41,12 @@ fun listPreview() {
 }
 
 
+@ExperimentalMaterialApi
 @Composable
 fun UpcomingSection(
     listadojuegos: List<GamesList>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -62,24 +63,26 @@ fun UpcomingSection(
         }
 
         Row(modifier.padding(20.dp)) {
-            ListadoUpcoming(listadojuegos)
+            ListadoUpcoming(listadojuegos, navController = navController)
         }
     }
 
 }
 
 
+@ExperimentalMaterialApi
 @Composable
 fun ListadoUpcoming(
     listadojuegos: List<GamesList>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(20.dp)) {
 
         items(listadojuegos.size) {
             var juego = listadojuegos[it]
             TarjetaJuego(
-                juego, modifier.background(MaterialTheme.colors.primary)
+                juego, modifier.background(MaterialTheme.colors.primary), navController = navController
             )
 
         }
@@ -88,15 +91,35 @@ fun ListadoUpcoming(
 }
 
 
+@ExperimentalMaterialApi
 @Composable
 fun TarjetaJuego(
     juego: GamesList,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
+    fun unidorRuta(vararg rutas:String):String{
+        return buildString {
+            append("detail_screen")
+                rutas.forEach{ruta->
+                    append("/${ruta}")
+                }
+
+        }
+    }
+//    fun pasarObjeto(juegoApasar: GamesList = juego){
+//        val juegoJson = Gson().toJson(juego).toString()
+//        navController.navigate("detail_screen/${juego.name}/$juegoJson")
+//    }
     Card(
         shape = RoundedCornerShape(15.dp),
         elevation = 10.dp, backgroundColor = MaterialTheme.colors.primary,
-
+        onClick = {
+            //navController.navigate("detail_screen/${juego.name}/${juego.slug}" )
+            navController.navigate(
+                unidorRuta(juego.name, juego.slug, juego.backgroundImage)
+            )
+        }
         ) {
         Column {
 
@@ -104,7 +127,7 @@ fun TarjetaJuego(
 
             ImagenLista(juego.backgroundImage)
 
-            Log.v("webjuego", juego.backgroundImage)
+            //Log.v("webjuego", juego.backgroundImage)
 
             //Spacer(modifier.size(10.dp))
             Text(
