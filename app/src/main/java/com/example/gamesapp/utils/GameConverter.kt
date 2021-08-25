@@ -13,5 +13,13 @@ fun iconGamePlataform(plataform:String):Int{
         else -> drawable.ic_launcher_foreground
     }
 }
+fun unidorRuta(vararg rutas:String):String{
+    return buildString {
+        append("detail_screen")
+        rutas.forEach{ruta->
+            append("/${ruta}")
+        }
 
+    }
+}
 //plataform.toLowerCase(Locale.ROOT)

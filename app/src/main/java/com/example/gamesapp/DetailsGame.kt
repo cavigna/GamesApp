@@ -1,5 +1,6 @@
 package com.example.gamesapp.utils
 
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -24,9 +25,9 @@ import coil.compose.rememberImagePainter
 import com.example.gamesapp.models.JuegoDetalles
 import com.example.gamesapp.models.upcoming.GamesList
 import com.example.gamesapp.ui.theme.GamesAppTheme
+import com.example.gamesapp.ui.viewmodels.MainViewModel
 
-
-
+//private val viewModel: MainViewModel by viewModels()
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewDetail() {
@@ -37,18 +38,19 @@ fun PreviewDetail() {
 fun DetailSection(
     juegoPrueba: JuegoDetalles = JuegoDetalles(),
     modifier: Modifier = Modifier,
-    name:String,
-    slug: String,
-    heroImage:String,
-    juego: GamesList? = null
+    name:String= "Halo",
+    slug: String = "halo",
+    heroImage:String? = null,
+    juego: GamesList? = null,
+    viewModel: MainViewModel
 ) {
     GamesAppTheme {
 
         Column(modifier.fillMaxWidth()
             .verticalScroll(rememberScrollState())) {
-            HeaderHero(juegoPrueba, modifier, name, heroImage)
+            HeaderHero(juegoPrueba, modifier, name, viewModel = viewModel)
             Column(modifier.padding(20.dp)) {
-               GaleriaImagenes(juegoPrueba)
+               GaleriaImagenes( viewModel = viewModel)
                 Text(juegoPrueba.descripcion, style = MaterialTheme.typography.body2
                 ,lineHeight = 20.sp)
 
@@ -66,18 +68,26 @@ fun HeaderHero(
     juegoPrueba: JuegoDetalles,
     modifier: Modifier,
     name: String,
-    heroImage: String,
-    juegoApi: GamesList? = null
+    //heroImage: String,
+    juegoApi: GamesList? = null,
+    viewModel: MainViewModel,
 ) {
+
+    val juegoModel = viewModel.currentGame.value!!
+    val heroImage =juegoModel.backgroundImage
     Box(
         modifier.fillMaxWidth()
-            , contentAlignment = Alignment.TopCenter
+            //.padding(vertical = 20.dp)
+            , contentAlignment = Alignment.TopCenter,
+
     ) {
         val pintor = rememberImagePainter(data = heroImage)
         Image(painter = pintor, null, alpha = 0.5f,
+            modifier = modifier.size(width = 400.dp, height = 200.dp),
+            contentScale = ContentScale.Crop
         )
         Text(
-            name,
+            juegoModel.name,
             style = MaterialTheme.typography.h2,
             textAlign = TextAlign.Center, color = Color.White,
             fontWeight = FontWeight.Bold, modifier = modifier.align(Alignment.BottomCenter)
@@ -88,22 +98,25 @@ fun HeaderHero(
 
 @Composable
 fun GaleriaImagenes(
-    juego: JuegoDetalles,
-    modifier: Modifier = Modifier
+    juego: JuegoDetalles? = null,
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel
 ){
-    val juegosGaleria = juego.galeriaImagenes
+    val juegos = viewModel.currentGame.value!!
+    val juegosGaleria = juegos.shortScreenshots
     LazyRow(contentPadding = PaddingValues(vertical = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         items(juegosGaleria.size){
+            //var pintor = rememberImagePainter(data = imagen)
             Image(
-                //painter = painterResource(R.drawable.senuas)
-
-                painter = painterResource(juegosGaleria[it]), contentDescription = null,
+                painter = rememberImagePainter(data = juegosGaleria[it].image), contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = modifier.size(width = 215.dp, height = 110.dp)
                     .clip(RoundedCornerShape(10.dp))
             )
         }
     }
+
+    //painter = painterResource(R.drawable.senuas)
 
 }
 

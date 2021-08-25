@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import coil.ImageLoader
 import coil.compose.ImagePainter
@@ -26,6 +27,7 @@ import com.bumptech.glide.Glide
 import com.example.gamesapp.models.JuegoPrueba
 import com.example.gamesapp.models.upcoming.GamesList
 import com.example.gamesapp.ui.theme.GamesAppTheme
+import com.example.gamesapp.ui.viewmodels.MainViewModel
 import com.example.gamesapp.utils.Constants.juegos
 import com.example.gamesapp.utils.iconGamePlataform
 import com.google.gson.Gson
@@ -46,7 +48,8 @@ fun listPreview() {
 fun UpcomingSection(
     listadojuegos: List<GamesList>,
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    viewModel: MainViewModel,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -63,7 +66,7 @@ fun UpcomingSection(
         }
 
         Row(modifier.padding(20.dp)) {
-            ListadoUpcoming(listadojuegos, navController = navController)
+            ListadoUpcoming(listadojuegos, navController = navController, viewModel = viewModel)
         }
     }
 
@@ -75,14 +78,17 @@ fun UpcomingSection(
 fun ListadoUpcoming(
     listadojuegos: List<GamesList>,
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    viewModel: MainViewModel,
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(20.dp)) {
 
         items(listadojuegos.size) {
             var juego = listadojuegos[it]
             TarjetaJuego(
-                juego, modifier.background(MaterialTheme.colors.primary), navController = navController
+                juego, modifier.background(MaterialTheme.colors.primary)
+                , navController = navController,
+                viewModel = viewModel
             )
 
         }
@@ -96,17 +102,10 @@ fun ListadoUpcoming(
 fun TarjetaJuego(
     juego: GamesList,
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    viewModel: MainViewModel,
 ) {
-    fun unidorRuta(vararg rutas:String):String{
-        return buildString {
-            append("detail_screen")
-                rutas.forEach{ruta->
-                    append("/${ruta}")
-                }
 
-        }
-    }
 //    fun pasarObjeto(juegoApasar: GamesList = juego){
 //        val juegoJson = Gson().toJson(juego).toString()
 //        navController.navigate("detail_screen/${juego.name}/$juegoJson")
@@ -115,9 +114,14 @@ fun TarjetaJuego(
         shape = RoundedCornerShape(15.dp),
         elevation = 10.dp, backgroundColor = MaterialTheme.colors.primary,
         onClick = {
+            viewModel.currentGamePutter(juego)
             //navController.navigate("detail_screen/${juego.name}/${juego.slug}" )
+           val juegoJson = Gson().toJson(juego).toString()
             navController.navigate(
-                unidorRuta(juego.name, juego.slug, juego.backgroundImage)
+                //unidorRuta(juego.name, juego.slug, juegoJson)
+                //unidorRuta(juegoJson)
+                //"detail_screen/juegoList = ${juegoJson}"
+                "detail_screen"
             )
         }
         ) {

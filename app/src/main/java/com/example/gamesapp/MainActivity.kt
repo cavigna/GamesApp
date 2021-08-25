@@ -62,26 +62,35 @@ class MainActivity : ComponentActivity() {
                             "main_screen",
 
                             ) {
-                            UpcomingSection(gamesList, navController = navController)
+                            UpcomingSection(gamesList, navController = navController, viewModel = viewModel)
                         }
-                        composable("detail_screen/{name}/{slug}/{heroImage}",
+                        //var juego = navController.previousBackStackEntry?.arguments?.getParcelable<GamesList>("book")
+                        composable("detail_screen",
+                        //composable("detail_screen/juegoList = {juegoList}",
+                        //composable("detail_screen/{name}/{slug}/{juegoList}",
                             arguments = listOf(
-                                navArgument("name") { type = NavType.StringType},
-                                navArgument("slug") { type = NavType.StringType},
-                                navArgument("heroImage") { type = NavType.StringType},
+                                //navArgument("name") { type = NavType.StringType},
+                                //navArgument("slug") { type = NavType.StringType},
+                                //navArgument("heroImage") { type = NavType.StringType},
+                                navArgument("juegoList"){type = NavType.StringType}
+
 
 
 
                             )
+
                         ) { juego ->
 
-                            val nombre = remember {
-                                juego.arguments?.getString("name")
-                            }
-                            val slug = juego.arguments?.getString("slug")!!
-                            val heroImage = juego.arguments?.getString("heroImage")!!
+//                            val nombre = remember {
+//                                juego.arguments?.getString("name")
+//                            }
+//                            val slug = juego.arguments?.getString("slug")!!
+//                            val heroImage = remember{
+//                                juego.arguments?.getString("heroImage")!!
+//                            }
+                            val juegaso = Gson().fromJson(juego.arguments!!.getString("juegoList"), GamesList::class.java)
 
-                            DetailSection(name = nombre!!, slug = slug, heroImage = heroImage)
+                            DetailSection(viewModel = viewModel )
                         }
                     }
 

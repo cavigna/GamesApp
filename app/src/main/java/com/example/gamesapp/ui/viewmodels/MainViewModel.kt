@@ -27,6 +27,8 @@ class MainViewModel @Inject constructor(private val repository: GamesRepository)
     private var _prueba : MutableLiveData<GameDetail> = MutableLiveData()
     val prueba : LiveData<GameDetail> get() = _prueba
 
+    private var _currentGame : MutableLiveData<GamesList> = MutableLiveData()
+    val currentGame : LiveData<GamesList> get() = _currentGame
 
     init{
         upcomingGames()
@@ -49,6 +51,12 @@ class MainViewModel @Inject constructor(private val repository: GamesRepository)
             _prueba.postValue(respuesta)
             details.value = respuesta
 
+        }
+    }
+
+    fun currentGamePutter(gamesList: GamesList){
+        viewModelScope.launch {
+            _currentGame.postValue(gamesList)
         }
     }
 }
