@@ -30,6 +30,10 @@ class MainViewModel @Inject constructor(private val repository: GamesRepository)
     private var _currentGame : MutableLiveData<GamesList> = MutableLiveData()
     val currentGame : LiveData<GamesList> get() = _currentGame
 
+    private var _currentGameDetails : MutableLiveData<GameDetail> = MutableLiveData()
+    val currentGameDetails : LiveData<GameDetail> get() = _currentGameDetails
+
+
     init{
         upcomingGames()
     }
@@ -48,7 +52,7 @@ class MainViewModel @Inject constructor(private val repository: GamesRepository)
     fun detailGameRespone(slug: String){
         viewModelScope.launch(IO) {
             val respuesta = repository.detailGameResponse(slug)
-            _prueba.postValue(respuesta)
+            _currentGameDetails.postValue(respuesta)
             details.value = respuesta
 
         }
@@ -59,4 +63,10 @@ class MainViewModel @Inject constructor(private val repository: GamesRepository)
             _currentGame.postValue(gamesList)
         }
     }
+
+//    fun currentGameDetail(){
+//        viewModelScope.launch (IO){
+//            val respuesta = repository
+//        }
+//    }
 }

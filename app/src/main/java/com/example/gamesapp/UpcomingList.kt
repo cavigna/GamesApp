@@ -11,27 +11,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import coil.ImageLoader
-import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
-import coil.transform.CircleCropTransformation
-import com.bumptech.glide.Glide
-import com.example.gamesapp.models.JuegoPrueba
 import com.example.gamesapp.models.upcoming.GamesList
 import com.example.gamesapp.ui.theme.GamesAppTheme
 import com.example.gamesapp.ui.viewmodels.MainViewModel
-import com.example.gamesapp.utils.Constants.juegos
-import com.example.gamesapp.utils.iconGamePlataform
+import com.example.gamesapp.utils.iconGamePlataformParent
 import com.google.gson.Gson
-import dev.chrisbanes.accompanist.glide.GlideImage
 
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -82,7 +72,6 @@ fun ListadoUpcoming(
     viewModel: MainViewModel,
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(20.dp)) {
-
         items(listadojuegos.size) {
             var juego = listadojuegos[it]
             TarjetaJuego(
@@ -93,7 +82,6 @@ fun ListadoUpcoming(
 
         }
     }
-
 }
 
 
@@ -106,16 +94,14 @@ fun TarjetaJuego(
     viewModel: MainViewModel,
 ) {
 
-//    fun pasarObjeto(juegoApasar: GamesList = juego){
-//        val juegoJson = Gson().toJson(juego).toString()
-//        navController.navigate("detail_screen/${juego.name}/$juegoJson")
-//    }
+
     Card(
         shape = RoundedCornerShape(15.dp),
         elevation = 10.dp, backgroundColor = MaterialTheme.colors.primary,
         onClick = {
             viewModel.currentGamePutter(juego)
-            //navController.navigate("detail_screen/${juego.name}/${juego.slug}" )
+            viewModel.detailGameRespone(juego.slug)
+
            val juegoJson = Gson().toJson(juego).toString()
             navController.navigate(
                 //unidorRuta(juego.name, juego.slug, juegoJson)
@@ -123,6 +109,8 @@ fun TarjetaJuego(
                 //"detail_screen/juegoList = ${juegoJson}"
                 "detail_screen"
             )
+
+            //navController.navigate("detail_screen/${juego.name}/${juego.slug}" )
         }
         ) {
         Column {
@@ -156,18 +144,13 @@ fun TarjetaJuego(
                     it.platform.slug == "pc" || it.platform.slug == "xbox" ||
                             it.platform.slug == "playstation"
                 }
-
                 for (plataforma in listaPataformaAdmitidas ) {
-
-
                     Image(
-                        painter = painterResource(iconGamePlataform(plataforma.platform.slug)),
+                        painter = painterResource(iconGamePlataformParent(plataforma.platform.slug)),
                         null,
                         modifier.size(30.dp)
                             .padding(end = 10.dp)
-
                     )
-
                     Log.v("plata", plataforma.platform.slug)
 
                 }

@@ -3,7 +3,7 @@ package com.example.gamesapp.models.details
 
 import com.google.gson.annotations.SerializedName
 
-data class Developer(
+data class DeveloperDetail(
     @SerializedName("games_count")
     var gamesCount: Int = 0,
     @SerializedName("id")

@@ -1,44 +1,23 @@
 package com.example.gamesapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
-import com.example.gamesapp.models.JuegoPrueba
 import com.example.gamesapp.models.upcoming.GamesList
 //import com.example.gamesapp.navigation.Navigation
 import com.example.gamesapp.ui.viewmodels.MainViewModel
 import com.example.gamesapp.ui.theme.GamesAppTheme
 import com.example.gamesapp.utils.DetailSection
-import com.example.gamesapp.utils.iconGamePlataform
-import com.example.gamesapp.utils.pruebas.DetailSectionPrueba
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -66,7 +45,7 @@ class MainActivity : ComponentActivity() {
                         }
                         //var juego = navController.previousBackStackEntry?.arguments?.getParcelable<GamesList>("book")
                         composable("detail_screen",
-                        //composable("detail_screen/juegoList = {juegoList}",
+                       //composable("detail_screen/juegoList = {juegoList}/{name}/{color}/{fecha}",
                         //composable("detail_screen/{name}/{slug}/{juegoList}",
                             arguments = listOf(
                                 //navArgument("name") { type = NavType.StringType},

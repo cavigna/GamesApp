@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.example.gamesapp.R
 import com.example.gamesapp.models.JuegoPrueba
 import com.example.gamesapp.ui.theme.GamesAppTheme
-import com.example.gamesapp.utils.iconGamePlataform
+import com.example.gamesapp.utils.iconGamePlataformParent
 
 @Composable
 fun Greeting(name: String) {
@@ -122,7 +122,7 @@ fun Tarjeta(
                 ) {
                     for (i in listado) {
                         Image(
-                            painter = painterResource(iconGamePlataform(i)),
+                            painter = painterResource(iconGamePlataformParent(i)),
                             null,
                             modifier.size(40.dp)
                                 .padding(end = 10.dp)
