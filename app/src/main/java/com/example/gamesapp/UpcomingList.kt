@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.gamesapp.models.upcoming.GamesList
-import com.example.gamesapp.ui.theme.GamesAppTheme
+import com.example.gamesapp.ui.theme.*
 import com.example.gamesapp.ui.viewmodels.MainViewModel
 import com.example.gamesapp.utils.iconGamePlataformParent
 import com.google.gson.Gson
@@ -71,12 +71,16 @@ fun ListadoUpcoming(
     navController: NavController,
     viewModel: MainViewModel,
 ) {
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(20.dp)
+
+        ) {
         items(listadojuegos.size) {
             var juego = listadojuegos[it]
             TarjetaJuego(
-                juego, modifier.background(MaterialTheme.colors.primary)
-                , navController = navController,
+                juego,
+                //modifier.background(MaterialTheme.colors.primary),
+                //modifier.background(greyCool),
+                navController = navController,
                 viewModel = viewModel
             )
 
@@ -97,7 +101,7 @@ fun TarjetaJuego(
 
     Card(
         shape = RoundedCornerShape(15.dp),
-        elevation = 10.dp, backgroundColor = MaterialTheme.colors.primary,
+        elevation = 10.dp, backgroundColor = greenXbox ,
         onClick = {
             viewModel.currentGamePutter(juego)
             viewModel.detailGameRespone(juego.slug)
