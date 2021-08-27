@@ -21,7 +21,9 @@ class MainViewModel @Inject constructor(private val repository: GamesRepository)
 
     private var _games : MutableLiveData<List<GamesList>> = MutableLiveData()
     val games : LiveData<List<GamesList>> get() = _games
+
     var upcoming :MutableState<List<GamesList>> = mutableStateOf(listOf())
+
     var details : MutableState<GameDetail> = mutableStateOf(GameDetail())
 
     private var _prueba : MutableLiveData<GameDetail> = MutableLiveData()

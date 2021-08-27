@@ -10,8 +10,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
@@ -22,8 +26,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,7 +59,7 @@ fun DetailSection(
 
         if (juegoDetalles.platforms.isEmpty()) {
             CircularProgressIndicator()
-        } else{
+        } else {
 
             Column(
                 modifier.fillMaxWidth()
@@ -62,7 +69,7 @@ fun DetailSection(
                 Log.v("convertidor", stringToSlug(juegoDetalles.name))
                 Log.v("convertidorOriginal", juegoDetalles.slug)
 
-                //SearchBar()
+                SearchBar(viewModel = viewModel)
                 HeaderHero(modifier, viewModel = viewModel)
 
                 Column(modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -87,7 +94,7 @@ fun DetailSection(
                 }
             }
 
-    }
+        }
     }
 
 }
@@ -150,27 +157,30 @@ fun GaleriaImagenes(
 fun GameInfoDetails(
     juegoDetalles: GameDetail,
     modifier: Modifier = Modifier,
-   // viewModel: MainViewModel
-){
+    // viewModel: MainViewModel
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround
-    ){
-        Text("Developer", style = MaterialTheme.typography.h6)
-        Card(
-            modifier = modifier.size(height = 30.dp, width = 100.dp),
-            shape = RoundedCornerShape(2.dp),
-            backgroundColor = greyCool
-        ) {
-            Text(juegoDetalles.developers[0].name)
-            Log.v("vevo", juegoDetalles.toString())
+    ) {
+        if (!juegoDetalles.developers.isNullOrEmpty()) {
+            Text("Developer", style = MaterialTheme.typography.h6)
+            Card(
+                modifier = modifier.size(height = 30.dp, width = 100.dp),
+                shape = RoundedCornerShape(2.dp),
+                backgroundColor = greyCool
+            ) {
+                Text(juegoDetalles.developers[0].name)
+                Log.v("vevo", juegoDetalles.toString())
+            }
+            Spacer(modifier.size(10.dp))
         }
-        Spacer(modifier.size(10.dp))
+
 
         Text("Plataforms", style = MaterialTheme.typography.h6)
 
-        LazyRow (horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            items(juegoDetalles.platforms.size){
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            items(juegoDetalles.platforms.size) {
 
                 var nombrePlataforma = juegoDetalles.platforms[it].platform.name
 
@@ -179,7 +189,8 @@ fun GameInfoDetails(
                     shape = RoundedCornerShape(2.dp),
                     backgroundColor = colorPlataformPiker(nombrePlataforma)
                 ) {
-                    Text(nombrePlataforma,
+                    Text(
+                        nombrePlataforma,
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.button,
                         modifier = modifier.align(Alignment.CenterHorizontally),
@@ -213,7 +224,11 @@ fun GameInfoDetails(
                     shape = RoundedCornerShape(2.dp),
                     backgroundColor = Color.LightGray
                 ) {
-                    Text(g.name, textAlign = TextAlign.Center, style = MaterialTheme.typography.caption)
+                    Text(
+                        g.name,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.caption
+                    )
                 }
             }
         }
@@ -224,14 +239,13 @@ fun GameInfoDetails(
 
         val listadoStore = juegoDetalles.stores
 
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(20.dp)){
-            items(listadoStore.size){
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+            items(listadoStore.size) {
                 var logo = iconGameStore(listadoStore[it].store.name)
                 Icon(
                     painterResource(logo), null,
                     tint = Color.White,
-                    modifier = modifier.size(50.dp)
-                )
+                    modifier = modifier.size(50.dp)                )
             }
         }
 
@@ -242,43 +256,94 @@ fun GameInfoDetails(
 fun SearchBar(
     modifier: Modifier = Modifier,
     hint: String = "",
-    onSearch: (String) -> Unit ={}
-){
-    var text by remember{mutableStateOf("")}
-    var isHintDisplayed by remember { mutableStateOf(hint!="") }
+    viewModel: MainViewModel,
+    onSearch: (String) -> Unit = { }
+) {
+    var text by remember { mutableStateOf("") }
+    var isHintDisplayed by remember { mutableStateOf(hint != "") }
 
-    Box(modifier = modifier){
-        BasicTextField(
-            value=text,
+    Box(modifier = modifier) {
+        TextField(
+            value = text,
             onValueChange = {
                 text = it
-                onSearch(it)
+                //viewModel.detailGameRespone(text)
+                //onSearch(it)
             },
             maxLines = 1,
             singleLine = true,
             textStyle = TextStyle(color = Color.Black),
-            modifier = modifier.
-                    fillMaxWidth()
+            modifier = modifier.fillMaxWidth()
                 .shadow(5.dp, CircleShape)
                 .background(Color.White, CircleShape)
-                .padding(horizontal = 20.dp, vertical = 12.dp)
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search),
+
+            leadingIcon = { Icon(Icons.Filled.Search, null)},
+
+           keyboardActions =  KeyboardActions(
+                onSearch = {
+                    viewModel.detailGameRespone(text)
+                    defaultKeyboardAction(imeAction = ImeAction.Done)
+                }
+            ),
+        )
+    }
+}
+
 //                .onFocusChanged {
 //                    isHintDisplayed = it != FocusState.Active
 //                }
+
+//        if (isHintDisplayed){
+//            Text(hint, color = Color.LightGray,
+//            modifier = modifier.padding(horizontal = 20.dp, vertical = 12.dp)
+//                )
+//        }
+
+
+/*
+@Composable
+fun SearchBar(
+    modifier: Modifier = Modifier,
+    hint: String = "",
+    viewModel: MainViewModel
+   // onSearch: (String) -> Unit = {}
+) {
+    var text by remember { mutableStateOf("") }
+    var isHintDisplayed by remember { mutableStateOf(hint != "") }
+
+    Box(modifier = modifier) {
+        TextField(
+            value = text,
+            onValueChange = {
+                text = it
+                //viewModel.detailGameRespone(text)
+                //onSearch(it)
+            },
+            maxLines = 1,
+            singleLine = true,
+            textStyle = TextStyle(color = Color.Black),
+            modifier = modifier.fillMaxWidth()
+                .shadow(5.dp, CircleShape)
+                .background(Color.White, CircleShape)
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search
+            ),
+            leadingIcon = { Icon(Icons.Filled.Search, null)},
+
+
         )
 
-        if (isHintDisplayed){
-            Text(hint, color = Color.LightGray,
-            modifier = modifier.padding(horizontal = 20.dp, vertical = 12.dp)
-                )
-        }
     }
-
-
 }
-
-
-
+ */
 
 
 

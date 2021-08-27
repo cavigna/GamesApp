@@ -27,7 +27,10 @@ data class GameDetail(
     @SerializedName("description_raw")
     var descriptionRaw: String = "",
     @SerializedName("developers")
-    var developers: List<DeveloperDetail> = listOf(DeveloperDetail(0, 0 , "", "", "")),
+
+    var developers: List<DeveloperDetail> =
+        listOf(DeveloperDetail(0, 0 , "", "", "")),
+
     @SerializedName("dominant_color")
     var dominantColor: String = "",
     @SerializedName("esrb_rating")
