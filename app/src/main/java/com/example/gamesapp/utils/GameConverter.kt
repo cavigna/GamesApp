@@ -49,6 +49,18 @@ fun colorPlataformPiker(plataform: String): Color {
 
 }
 
+fun colorScoreConverter(score:Int): Color{
+    var color = Color.White
+    return when(score){
+        in 1..49 -> Color.Red
+        in 50..75 -> Color.Yellow
+        in 75..100->Color.Green
+        else-> Color.White
+    }
+
+
+}
+
 
 //var str = "Halo Infinite".replace(" ","-").lowercase()
 

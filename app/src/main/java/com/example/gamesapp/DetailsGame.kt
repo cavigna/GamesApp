@@ -248,6 +248,7 @@ fun MetaScoreBox(
     modifier: Modifier = Modifier
 ){
     var puntaje = juegoDetalles.metacritic
+    //var colorPuntaje = colorScoreConverter(puntaje as Int)
     if(puntaje != null){
         Box(
             modifier = modifier.size(30.dp), contentAlignment = Alignment.Center
