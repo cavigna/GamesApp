@@ -1,6 +1,7 @@
 package com.example.gamesapp.utils.pruebas
 
 import androidx.compose.animation.expandHorizontally
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -35,7 +36,7 @@ import com.example.gamesapp.utils.iconGameStore
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewDetail() {
-    DetailSectionPrueba()
+   DetailSectionPrueba()
 }
 
 @Composable
@@ -58,7 +59,7 @@ fun DetailSectionPrueba(
                     juego.descripcion,
                     style = MaterialTheme.typography.body2,
                     lineHeight = 20.sp,
-                    maxLines = 5,
+                    maxLines = 3,
                     modifier = modifier.padding(5.dp)
                 )
                 DetallesInfoPrueba()
@@ -161,6 +162,7 @@ fun DetallesInfoPrueba(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround
     ) {
+        MetaScoreBoxPrueba()
         Text("DeveloperDetail", style = MaterialTheme.typography.h6)
         Card(
             modifier = modifier.size(height = 20.dp, width = 100.dp),
@@ -191,10 +193,7 @@ fun DetallesInfoPrueba(
 
                             )
                         }
-
-
                     }
-
             }
         }
         Spacer(modifier.size(10.dp))
@@ -245,13 +244,31 @@ fun DetallesInfoPrueba(
             }
         }
 
-//        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-//
-//        }
-
     }
 
 
+}
+
+@Composable
+fun MetaScoreBoxPrueba(
+    modifier: Modifier = Modifier
+){
+    Box(
+        modifier = modifier.size(30.dp), contentAlignment = Alignment.Center
+    ){
+        Card(modifier = modifier.fillMaxSize()
+            .align(Alignment.Center)
+            .size(40.dp),
+            shape = RoundedCornerShape(5.dp),
+            border = BorderStroke(2.dp, Color.Green),
+            backgroundColor = Color.Transparent
+
+            ){
+            Text("45", textAlign = TextAlign.Center, fontSize = 25.sp)
+        }
+
+
+    }
 }
 
 

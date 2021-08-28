@@ -19,12 +19,16 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: GamesRepository):ViewModel() {
 
-    private var _games : MutableLiveData<List<GamesList>> = MutableLiveData()
-    val games : LiveData<List<GamesList>> get() = _games
+
 
     var upcoming :MutableState<List<GamesList>> = mutableStateOf(listOf())
-
+    var searchMutableListGame :MutableState<List<GamesList>> = mutableStateOf(listOf())
     var details : MutableState<GameDetail> = mutableStateOf(GameDetail())
+    var bestGamesYearMutable : MutableState<List<GamesList>> = mutableStateOf(listOf())
+
+
+    private var _games : MutableLiveData<List<GamesList>> = MutableLiveData()
+    val games : LiveData<List<GamesList>> get() = _games
 
     private var _prueba : MutableLiveData<GameDetail> = MutableLiveData()
     val prueba : LiveData<GameDetail> get() = _prueba
@@ -38,6 +42,7 @@ class MainViewModel @Inject constructor(private val repository: GamesRepository)
 
     init{
         upcomingGames()
+        //bestGamesOfYear()
     }
 
 
@@ -51,6 +56,13 @@ class MainViewModel @Inject constructor(private val repository: GamesRepository)
         }
     }
 
+    fun searchGamesList(queryGame:String){
+        viewModelScope.launch {
+            searchMutableListGame.value = repository.searchGame(queryGame).gamesLists
+            upcoming.value = repository.searchGame(queryGame).gamesLists
+        }
+    }
+
     fun detailGameRespone(slug: String){
         viewModelScope.launch(IO) {
             val respuesta = repository.detailGameResponse(slug)
@@ -60,9 +72,26 @@ class MainViewModel @Inject constructor(private val repository: GamesRepository)
         }
     }
 
+     fun bestGamesOfYear(){
+         viewModelScope.launch {
+             bestGamesYearMutable.value =  repository.bestGameOfYear().gamesLists
+             upcoming.value = repository.bestGameOfYear().gamesLists
+         }
+     }
+
     fun currentGamePutter(gamesList: GamesList){
         viewModelScope.launch {
             _currentGame.postValue(gamesList)
+        }
+    }
+
+
+
+    fun prueba(slug: String){
+        viewModelScope.launch {
+            val result = repository.prueba(slug)
+            Log.v("poronga", result.raw().request().url().toString())
+            //otromas = result.body()!!
         }
     }
 

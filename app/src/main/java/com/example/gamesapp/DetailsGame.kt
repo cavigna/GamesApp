@@ -2,17 +2,14 @@ package com.example.gamesapp.utils
 
 import android.util.Log
 import androidx.compose.animation.expandVertically
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -35,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.gamesapp.models.details.GameDetail
 import com.example.gamesapp.ui.theme.GamesAppTheme
@@ -51,7 +49,8 @@ fun PreviewDetail() {
 @Composable
 fun DetailSection(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    navController: NavController
 ) {
     val juegoDetalles = viewModel.details.component1()
     var isExpanded = remember { mutableStateOf(false) }
@@ -66,28 +65,30 @@ fun DetailSection(
                     .verticalScroll(rememberScrollState())
             ) {
 
-                Log.v("convertidor", stringToSlug(juegoDetalles.name))
-                Log.v("convertidorOriginal", juegoDetalles.slug)
+                //Log.v("convertidor", stringToSlug(juegoDetalles.name))
+                //Log.v("convertidorOriginal", juegoDetalles.slug)
 
-                SearchBar(viewModel = viewModel)
+                SearchBar(viewModel = viewModel, navController = navController)
                 HeaderHero(modifier, viewModel = viewModel)
 
                 Column(modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
                     GaleriaImagenes(viewModel = viewModel)
+                    if (!juegoDetalles.descriptionRaw.isNullOrEmpty()) {
+                        Text("Description", style = MaterialTheme.typography.h6)
 
-                    Text("Description", style = MaterialTheme.typography.h6)
 
-
-                    Text(
-                        juegoDetalles.descriptionRaw,
-                        style = MaterialTheme.typography.body2,
-                        lineHeight = 20.sp,
-                        modifier = modifier.padding(5.dp)
+                        Text(
+                            juegoDetalles.descriptionRaw,
+                            style = MaterialTheme.typography.body2,
+                            lineHeight = 20.sp,
+                            modifier = modifier.padding(5.dp)
 //                    maxLines = if (isExpanded.value) Int.MAX_VALUE else 1,
 //                    overflow = if (isExpanded.value) TextOverflow.Visible else TextOverflow.Ellipsis,
 
-                    )
+                        )
+                        MetaScoreBox(juegoDetalles)
+                    }
 
                     GameInfoDetails(juegoDetalles = juegoDetalles)
 
@@ -200,18 +201,6 @@ fun GameInfoDetails(
             }
         }
 
-//        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-//            for (l in juegoDetalles.platforms) {
-//                Card(
-//                    modifier = modifier.size(height = 20.dp, width = 100.dp),
-//                    shape = RoundedCornerShape(2.dp),
-//                    backgroundColor = colorPlataformPiker(l.platform.name)
-//                ) {
-//                    Text(l.platform.name, textAlign = TextAlign.Center, style = MaterialTheme.typography.caption)
-//                }
-//            }
-//        }
-
         Spacer(modifier.size(10.dp))
 
         Text("Genres", style = MaterialTheme.typography.h6)
@@ -245,10 +234,37 @@ fun GameInfoDetails(
                 Icon(
                     painterResource(logo), null,
                     tint = Color.White,
-                    modifier = modifier.size(50.dp)                )
+                    modifier = modifier.size(50.dp)
+                )
             }
         }
 
+    }
+}
+
+@Composable
+fun MetaScoreBox(
+    juegoDetalles: GameDetail,
+    modifier: Modifier = Modifier
+){
+    var puntaje = juegoDetalles.metacritic
+    if(puntaje != null){
+        Box(
+            modifier = modifier.size(30.dp), contentAlignment = Alignment.Center
+        ){
+            Card(modifier = modifier.fillMaxSize()
+                .align(Alignment.Center)
+                .size(40.dp),
+                shape = RoundedCornerShape(5.dp),
+                border = BorderStroke(2.dp, Color.Green),
+                backgroundColor = Color.Transparent
+
+            ){
+                Text(puntaje.toString(), textAlign = TextAlign.Center, fontSize = 25.sp)
+            }
+
+
+        }
     }
 }
 
@@ -257,6 +273,7 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     hint: String = "",
     viewModel: MainViewModel,
+    navController: NavController,
     onSearch: (String) -> Unit = { }
 ) {
     var text by remember { mutableStateOf("") }
@@ -267,6 +284,7 @@ fun SearchBar(
             value = text,
             onValueChange = {
                 text = it
+                //Log.v("pasada", text)
                 //viewModel.detailGameRespone(text)
                 //onSearch(it)
             },
@@ -280,14 +298,23 @@ fun SearchBar(
 
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Search),
+                imeAction = ImeAction.Search
+            ),
 
-            leadingIcon = { Icon(Icons.Filled.Search, null)},
+            leadingIcon = { Icon(Icons.Filled.Search, null) },
 
-           keyboardActions =  KeyboardActions(
+            keyboardActions = KeyboardActions(
                 onSearch = {
-                    viewModel.detailGameRespone(text)
-                    defaultKeyboardAction(imeAction = ImeAction.Done)
+                    viewModel.prueba(text)
+                    viewModel.searchGamesList(text)
+                    //viewModel.detailGameRespone(stringToSlug(text))
+                    navController.navigate("search_result_screen")
+
+
+                    //Log.v("pasada", stringToSlug(stringToSlug(text)))
+                    Log.v("pasada", viewModel.prueba(text).toString())
+                    //Log.v("pasada", viewModel.otromas.toString())
+
                 }
             ),
         )
@@ -345,5 +372,47 @@ fun SearchBar(
 }
  */
 
+/*
+@Composable
+fun SearchBar(
+    modifier: Modifier = Modifier,
+    hint: String = "",
+    viewModel: MainViewModel,
+    onSearch: (String) -> Unit = { }
+) {
+    var text by remember { mutableStateOf("") }
+    var isHintDisplayed by remember { mutableStateOf(hint != "") }
 
+    Box(modifier = modifier) {
+        TextField(
+            value = text,
+            onValueChange = {
+                text = it
+                //viewModel.detailGameRespone(text)
+                //onSearch(it)
+            },
+            maxLines = 1,
+            singleLine = true,
+            textStyle = TextStyle(color = Color.Black),
+            modifier = modifier.fillMaxWidth()
+                .shadow(5.dp, CircleShape)
+                .background(Color.White, CircleShape)
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search),
+
+            leadingIcon = { Icon(Icons.Filled.Search, null)},
+
+           keyboardActions =  KeyboardActions(
+                onSearch = {
+                    viewModel.detailGameRespone(text)
+                    defaultKeyboardAction(imeAction = ImeAction.Done)
+                }
+            ),
+        )
+    }
+}
+ */
 

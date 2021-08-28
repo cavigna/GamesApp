@@ -41,8 +41,12 @@ data class GameDetail(
     var genres: List<Genre> = listOf(),
     @SerializedName("id")
     var id: Int = 0,
+//    @SerializedName("metacritic")
+//    var metacritic: Int = 0,
+
     @SerializedName("metacritic")
     var metacritic: Any = Any(),
+
     @SerializedName("metacritic_platforms")
     var metacriticPlatforms: List<Any> = listOf(),
     @SerializedName("metacritic_url")

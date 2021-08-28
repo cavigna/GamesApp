@@ -8,10 +8,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.gamesapp.R
 import com.example.gamesapp.R.drawable
-import com.example.gamesapp.ui.theme.bluePlayStation
-import com.example.gamesapp.ui.theme.blueWindows
-import com.example.gamesapp.ui.theme.greenXbox
-import com.example.gamesapp.ui.theme.greyCool
+import com.example.gamesapp.ui.theme.*
 import java.util.*
 
 fun iconGamePlataformParent(plataform:String):Int{
@@ -19,6 +16,7 @@ fun iconGamePlataformParent(plataform:String):Int{
         "pc"-> drawable.ic_windows_logo_white
         "xbox" -> drawable.ic_xbox_logo_white
         "playstation"-> drawable.ic_ps_logo
+        "nintendo" -> drawable.ic_resource_switch
         else -> drawable.ic_launcher_foreground
     }
 }
@@ -30,6 +28,7 @@ fun iconGameStore(store:String):Int{
         "gog" -> drawable.ic_gog
         "playstation store" -> drawable.ic_ps_logo
         "xbox store" -> drawable.ic_xbox_logo_white
+        "nintendo switch" -> drawable.ic_resource_switch
 
         else -> drawable.ic_launcher_foreground
 
@@ -43,6 +42,8 @@ fun colorPlataformPiker(plataform: String): Color {
         "xbox series s/x" -> greenXbox
         "playstation 4"-> bluePlayStation
         "playstation 5"-> bluePlayStation
+        "nintendo switch"-> redNintentdo
+        "macos"-> greyApple
         else -> greyCool
     }
 

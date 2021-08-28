@@ -54,6 +54,9 @@ fun UpcomingSection(
                 style = MaterialTheme.typography.h3, textAlign = TextAlign.Center,
             )
         }
+        Row(modifier.padding(20.dp)){
+            BotonPrueba(viewModel, navController)
+        }
 
         Row(modifier.padding(20.dp)) {
             ListadoUpcoming(listadojuegos, navController = navController, viewModel = viewModel)
@@ -146,7 +149,8 @@ fun TarjetaJuego(
                 val plataformasPadres = juego.parentPlatforms
                 val listaPataformaAdmitidas = plataformasPadres.filter {
                     it.platform.slug == "pc" || it.platform.slug == "xbox" ||
-                            it.platform.slug == "playstation"
+                            it.platform.slug == "playstation" ||
+                            it.platform.slug == "nintendo"
                 }
                 for (plataforma in listaPataformaAdmitidas ) {
                     Image(
@@ -180,6 +184,22 @@ fun ImagenLista(imagen: String) {
         )
     }
 
+}
+
+@Composable
+fun BotonPrueba(
+    viewModel: MainViewModel,
+    navController: NavController,
+    modifier: Modifier = Modifier
+){
+    Button(
+        onClick = {
+            viewModel.bestGamesOfYear()
+            navController.navigate("best_games_year_screen")
+        }
+    ){
+        Text("Best Games")
+    }
 }
 
 

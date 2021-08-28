@@ -24,6 +24,8 @@ val greenXbox =  Color(red = 16, green = 124, blue = 16)
 val bluePlayStation =  Color(red = 0, green = 48, blue = 135)
 val blueWindows=  Color(red = 0, green = 164, blue = 239)
 val greyCool = Color(red = 115, green = 115, blue = 115)
+val greyApple = Color(red = 163, green = 170, blue = 174)
+val redNintentdo = Color(230,0,18)
 
 
 val orange=  Color(red = 242, green = 80, blue = 34)

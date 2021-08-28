@@ -48,14 +48,7 @@ class MainActivity : ComponentActivity() {
                        //composable("detail_screen/juegoList = {juegoList}/{name}/{color}/{fecha}",
                         //composable("detail_screen/{name}/{slug}/{juegoList}",
                             arguments = listOf(
-                                //navArgument("name") { type = NavType.StringType},
-                                //navArgument("slug") { type = NavType.StringType},
-                                //navArgument("heroImage") { type = NavType.StringType},
                                 navArgument("juegoList"){type = NavType.StringType}
-
-
-
-
                             )
 
                         ) { juego ->
@@ -69,7 +62,17 @@ class MainActivity : ComponentActivity() {
 //                            }
                             val juegaso = Gson().fromJson(juego.arguments!!.getString("juegoList"), GamesList::class.java)
 
-                            DetailSection(viewModel = viewModel )
+                            DetailSection(viewModel = viewModel, navController = navController )
+                        }
+                        composable("details_search_screen"){
+                            DetailSearchScreen(viewModel = viewModel)
+                        }
+                        composable("search_result_screen"){
+                            UpcomingSection(listadojuegos = gamesList,viewModel= viewModel, navController = navController)
+                        }
+
+                        composable("best_games_year_screen"){
+                            UpcomingSection(gamesList, viewModel = viewModel, navController = navController)
                         }
                     }
 
